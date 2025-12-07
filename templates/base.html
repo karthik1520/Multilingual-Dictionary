@@ -443,6 +443,55 @@
             color: var(--muted);
         }
 
+        /* ---- History layout ---- */
+
+        .history-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .history-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 3px;
+            border-radius: 999px;
+            background: rgba(15,23,42,0.9);
+            border: 1px solid rgba(75,85,99,0.7);
+        }
+
+        .history-item .tag {
+            margin: 0;
+        }
+
+        .history-delete-btn {
+            border: none;
+            background: transparent;
+            border-radius: 999px;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            cursor: pointer;
+            color: var(--muted);
+            padding: 0;
+        }
+
+        .history-delete-btn:hover {
+            background: rgba(239,68,68,0.15);
+            color: #fecaca;
+        }
+
+        .clear-history-btn {
+            white-space: nowrap;
+            font-size: 11px;
+            padding: 4px 12px;
+            border-radius: 999px;
+        }
+
         @media (max-width: 900px) {
             .layout-grid,
             .layout-grid-wide {
@@ -475,18 +524,20 @@
         <nav>
             <!-- Home button -->
             <a class="nav-link primary" href="{{ url_for('home') }}">
-            <span class="icon">🏠</span>
-            <span>Home</span>
+                <span class="icon">🏠</span>
+                <span>Home</span>
             </a>
+
             <!-- Notes page -->
             <a class="nav-link" href="{{ url_for('notes') }}">
-            <span class="icon">📝</span>
-            <span>General Notes</span>
+                <span class="icon">📝</span>
+                <span>General Notes</span>
             </a>
+
             <!-- Overall search page -->
             <a class="nav-link" href="{{ url_for('search_all') }}">
-            <span class="icon">🔎</span>
-            <span>Search All</span>
+                <span class="icon">🔎</span>
+                <span>Search All</span>
             </a>
         </nav>
     </header>

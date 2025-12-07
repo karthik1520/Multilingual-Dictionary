@@ -439,6 +439,28 @@ def add_word_tag(language, word):
     return redirect(url_for("search", word=word, language=language))
 
 
+# ---------- HISTORY DELETE / CLEAR ----------
+
+@app.route("/history/delete", methods=["POST"])
+def delete_history_item():
+    """Delete a particular word from history."""
+    word = request.form.get("word", "").strip()
+    data = load_data()
+    if word:
+        data["history"] = [w for w in data["history"] if w != word]
+        save_data(data)
+    return redirect(url_for("home"))
+
+
+@app.route("/history/clear", methods=["POST"])
+def clear_history():
+    """Clear entire search history."""
+    data = load_data()
+    data["history"] = []
+    save_data(data)
+    return redirect(url_for("home"))
+
+
 # ---------- OVERALL SEARCH ROUTE ----------
 
 @app.route("/search_all", methods=["GET", "POST"])

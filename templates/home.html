@@ -166,13 +166,28 @@
         <div class="card-header">
             <div>
                 <div class="card-title">Recent history ⏱</div>
-                <div class="card-caption">Jump back to something you looked up earlier.</div>
+                <div class="card-caption">Jump back to something you looked up earlier, or clean up history.</div>
             </div>
+            {% if history %}
+                <form action="{{ url_for('clear_history') }}" method="post" style="margin:0;">
+                    <button type="submit" class="btn btn-ghost clear-history-btn">
+                        🗑 Clear all
+                    </button>
+                </form>
+            {% endif %}
         </div>
         {% if history %}
-            <div class="chips-row">
+            <div class="history-list">
                 {% for w in history %}
-                    <a class="tag" href="{{ url_for('search', word=w, language=selected_language) }}">{{ w }}</a>
+                    <div class="history-item">
+                        <a class="tag" href="{{ url_for('search', word=w, language=selected_language) }}">{{ w }}</a>
+                        <form action="{{ url_for('delete_history_item') }}" method="post" style="margin:0;">
+                            <input type="hidden" name="word" value="{{ w }}">
+                            <button type="submit" class="history-delete-btn" title="Remove from history">
+                                ✕
+                            </button>
+                        </form>
+                    </div>
                 {% endfor %}
             </div>
         {% else %}
