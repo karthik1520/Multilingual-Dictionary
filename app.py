@@ -36,7 +36,7 @@ WORD_OF_DAY_WORDS = [
     {"word": "आनंद", "language": "hi"},
     {"word": "அன்பு", "language": "ta"},     # Tamil: love
     {"word": "அருள்", "language": "ta"},     # Tamil: grace
-    {"word": "மெய்ப்பு", "language": "ta"}    # Tamil: truth / reality (depending on context)
+    {"word": "மெய்ப்பு", "language": "ta"}    # Tamil: truth / reality
 ]
 
 # Sanskrit study words (shown in a separate section)
@@ -66,7 +66,7 @@ def load_data():
             "history": [],
             "general_notes": [],
             "word_notes": {},
-            "word_tags": {}   # NEW: tags for words
+            "word_tags": {}   # tags for words
         }
         save_data(data)
         return data
@@ -374,6 +374,15 @@ def notes():
     return render_template("notes.html", general_notes=general_notes)
 
 
+@app.route("/notes/<int:note_id>/delete", methods=["POST"])
+def delete_general_note(note_id):
+    """Delete a general note by id."""
+    data = load_data()
+    data["general_notes"] = [n for n in data["general_notes"] if n["id"] != note_id]
+    save_data(data)
+    return redirect(url_for("notes"))
+
+
 @app.route("/word/<language>/<word>/add_note", methods=["POST"])
 def add_word_note(language, word):
     data = load_data()
@@ -395,6 +404,21 @@ def add_word_note(language, word):
     return redirect(url_for("search", word=word, language=language))
 
 
+@app.route("/word/<language>/<word>/note/<int:note_id>/delete", methods=["POST"])
+def delete_word_note(language, word, note_id):
+    """Delete a word-specific note by id."""
+    data = load_data()
+    notes = data["word_notes"].get(word, [])
+    notes = [n for n in notes if n["id"] != note_id]
+    if notes:
+        data["word_notes"][word] = notes
+    else:
+        # If no notes left for this word, remove the key entirely
+        data["word_notes"].pop(word, None)
+    save_data(data)
+    return redirect(url_for("search", word=word, language=language))
+
+
 @app.route("/word/<language>/<word>/add_tag", methods=["POST"])
 def add_word_tag(language, word):
     data = load_data()
@@ -413,6 +437,70 @@ def add_word_tag(language, word):
                 save_data(data)
 
     return redirect(url_for("search", word=word, language=language))
+
+
+# ---------- OVERALL SEARCH ROUTE ----------
+
+@app.route("/search_all", methods=["GET", "POST"])
+def search_all():
+    data = load_data()
+
+    if request.method == "POST":
+        query = request.form.get("query", "").strip()
+        return redirect(url_for("search_all", q=query))
+
+    query = request.args.get("q", "").strip()
+    results = None
+
+    if query:
+        q = query.lower()
+
+        # 1) Words from history, favorites, pinned, word_notes keys, word_tags keys
+        word_candidates = set(data["history"]) | set(data["favorites"]) | set(data["pinned"])
+        word_candidates |= set(data.get("word_notes", {}).keys())
+        word_candidates |= set(data.get("word_tags", {}).keys())
+
+        matching_words = sorted([w for w in word_candidates if q in w.lower()])
+
+        # 2) General notes
+        general_note_matches = [
+            note for note in data["general_notes"]
+            if q in note["text"].lower()
+        ]
+
+        # 3) Word-specific notes
+        word_note_matches = []
+        for w, notes in data.get("word_notes", {}).items():
+            for note in notes:
+                if q in note["text"].lower():
+                    word_note_matches.append({
+                        "word": w,
+                        "note": note
+                    })
+
+        # 4) Tags
+        tag_matches = []
+        for w, tags in data.get("word_tags", {}).items():
+            for t in tags:
+                if q in t.lower():
+                    tag_matches.append({
+                        "word": w,
+                        "tag": t
+                    })
+
+        results = {
+            "words": matching_words,
+            "general_notes": general_note_matches,
+            "word_notes": word_note_matches,
+            "tags": tag_matches,
+        }
+
+    return render_template(
+        "search_all.html",
+        query=query,
+        results=results,
+        default_language=DEFAULT_LANGUAGE,
+    )
 
 
 if __name__ == "__main__":

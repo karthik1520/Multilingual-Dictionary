@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="page-title">Search everything</div>
+        <div class="page-subtitle">Find words, general notes, word notes, and tags in one place.</div>
+    </div>
+    <div class="pill">
+        <span class="dot"></span>
+        Global search
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div>
+            <div class="card-title">Search across your data</div>
+            <div class="card-caption">Type any keyword. We’ll look in words, notes, and tags.</div>
+        </div>
+    </div>
+    <form action="{{ url_for('search_all') }}" method="post" style="display:flex; gap:8px; flex-wrap:wrap;">
+        <div style="flex:1 1 220px;">
+            <input type="text" name="query" placeholder="Search everything (e.g. 'spiritual', 'karma', 'exam')" value="{{ query or '' }}">
+        </div>
+        <div>
+            <input type="submit" value="Search" class="btn">
+        </div>
+    </form>
+</div>
+
+{% if query %}
+    {% if results %}
+        <div class="layout-grid" style="margin-top:16px;">
+            <!-- Left column: words + tags -->
+            <div class="stack">
+                <div class="card card-subtle">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Matching words</div>
+                            <div class="card-caption">From history, favourites, pinned, notes, and tags.</div>
+                        </div>
+                    </div>
+                    {% if results.words %}
+                        <div class="chips-row">
+                            {% for w in results.words %}
+                                <a class="tag" href="{{ url_for('search', word=w, language=default_language) }}">{{ w }}</a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="empty-state">No words matched “{{ query }}”.</p>
+                    {% endif %}
+                </div>
+
+                <div class="card card-subtle">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Matching tags</div>
+                            <div class="card-caption">Words that have a tag containing “{{ query }}”.</div>
+                        </div>
+                    </div>
+                    {% if results.tags %}
+                        <ul>
+                            {% for item in results.tags %}
+                                <li>
+                                    <a href="{{ url_for('search', word=item.word, language=default_language) }}">
+                                        {{ item.word }}
+                                    </a>
+                                    <span class="muted-text">– tag: “{{ item.tag }}”</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="empty-state">No tags matched “{{ query }}”.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Right column: notes -->
+            <div class="stack">
+                <div class="card card-subtle">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">General notes</div>
+                            <div class="card-caption">Notes not tied to a specific word.</div>
+                        </div>
+                    </div>
+                    {% if results.general_notes %}
+                        {% for note in results.general_notes %}
+                            <div class="note-card {% if note.important %}important{% endif %}">
+                                <div style="font-size:13px;">
+                                    {{ note.text }}
+                                </div>
+                                <div class="note-meta">
+                                    <span>{{ note.created_at }}</span>
+                                    {% if note.important %}
+                                        <span class="badge-important">
+                                            <span>★</span> Important
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="empty-state">No general notes matched “{{ query }}”.</p>
+                    {% endif %}
+                </div>
+
+                <div class="card card-subtle">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Word notes</div>
+                            <div class="card-caption">Notes attached to specific words.</div>
+                        </div>
+                    </div>
+                    {% if results.word_notes %}
+                        {% for item in results.word_notes %}
+                            <div class="note-card {% if item.note.important %}important{% endif %}">
+                                <div style="font-size:13px;">
+                                    <strong>
+                                        <a href="{{ url_for('search', word=item.word, language=default_language) }}">
+                                            {{ item.word }}
+                                        </a>:
+                                    </strong>
+                                    {{ item.note.text }}
+                                </div>
+                                <div class="note-meta">
+                                    <span>{{ item.note.created_at }}</span>
+                                    {% if item.note.important %}
+                                        <span class="badge-important">
+                                            <span>★</span> Important
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="empty-state">No word notes matched “{{ query }}”.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <p class="empty-state" style="margin-top:16px;">
+            Nothing matched “{{ query }}”.
+        </p>
+    {% endif %}
+{% endif %}
+{% endblock %}
