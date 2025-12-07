@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="page-title">Word details</div>
+        <div class="page-subtitle">See meanings, examples, synonyms, translations, and jot down notes.</div>
+    </div>
+    <div class="pill">
+        <span class="dot"></span>
+        Context-rich view
+    </div>
+</div>
+
+<div class="layout-grid-wide">
+    <!-- Left: word + meanings -->
+    <div class="card">
+        <div class="word-heading">
+            <div class="word-main">
+                <div class="word-main-title">{{ word }}</div>
+                <div class="word-meta">
+                    <span class="pill-language">
+                        <span class="icon">🌐</span>
+                        {% for lang in languages %}
+                            {% if lang.code == selected_language %}
+                                {{ lang.label }}
+                            {% endif %}
+                        {% endfor %}
+                    </span>
+                    {% if info and info.source_url %}
+                        <a href="{{ info.source_url }}" target="_blank" class="small-link">
+                            View on Wiktionary → 
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                <a class="btn btn-ghost btn-pill" href="{{ url_for('toggle_favorite', language=selected_language, word=word) }}">
+                    <span class="btn-icon">{% if is_favorite %}★{% else %}☆{% endif %}</span>
+                    <span>{% if is_favorite %}Unfavourite{% else %}Favourite{% endif %}</span>
+                </a>
+                <a class="btn btn-ghost btn-pill" href="{{ url_for('toggle_pin', language=selected_language, word=word) }}">
+                    <span class="btn-icon">{% if is_pinned %}📌{% else %}📍{% endif %}</span>
+                    <span>{% if is_pinned %}Unpin{% else %}Pin{% endif %}</span>
+                </a>
+            </div>
+        </div>
+
+        <div style="margin-top:14px; padding-top:12px; border-top:1px solid var(--border-subtle);">
+            <form action="{{ url_for('search') }}" method="post" style="display:flex; gap:8px; flex-wrap:wrap;">
+                <div style="flex:1 1 180px;">
+                    <input type="text" name="word" placeholder="Search another word..." required value="{{ word }}">
+                </div>
+                <div>
+                    <select name="language">
+                        {% for lang in languages %}
+                            <option value="{{ lang.code }}"
+                                {% if lang.code == selected_language %}selected{% endif %}>
+                                {{ lang.label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <input type="submit" value="Search" class="btn">
+                </div>
+            </form>
+        </div>
+
+        {% if info %}
+            <div style="margin-top:18px;">
+                <div class="section-title">Meanings</div>
+                <ul>
+                    {% for d in info.definitions %}
+                        <li>
+                            <strong>[{{ d.language_name }}{% if d.part_of_speech %} · {{ d.part_of_speech }}{% endif %}]</strong>
+                            &nbsp;{{ d.definition }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            {% if info.examples %}
+                <div style="margin-top:16px;">
+                    <div class="section-title">Examples</div>
+                    <ul>
+                        {% for ex in info.examples %}
+                            <li>{{ ex }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            {% if info.synonyms %}
+                <div style="margin-top:16px;">
+                    <div class="section-title">Synonyms</div>
+                    <div class="chips-row">
+                        {% for s in info.synonyms %}
+                            <span class="tag">{{ s }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if info.translations %}
+                <div style="margin-top:16px;">
+                    <div class="section-title">Translations</div>
+                    <ul>
+                        {% for t in info.translations %}
+                            <li>
+                                {{ t.word }}
+                                <span class="muted-text">({{ t.language_name }} – {{ t.language_code }})</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        {% else %}
+            <p class="empty-state" style="margin-top:18px;">
+                No information found for this word in this language.  
+                Try another language or spelling.
+            </p>
+        {% endif %}
+    </div>
+
+    <!-- Right: notes for this word -->
+    <div class="card card-subtle">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Notes for “{{ word }}”
+                </div>
+                <div class="card-caption">Use this area to store personal meanings, associations, or mnemonics.</div>
+            </div>
+            <span class="badge-important">
+                <span>★</span> Important notes float visually
+            </span>
+        </div>
+
+        <form action="{{ url_for('add_word_note', language=selected_language, word=word) }}" method="post" style="margin-bottom:14px;">
+            <textarea name="note_text" rows="3" placeholder="Write a note about this word..."></textarea><br>
+            <label class="label-inline" style="margin-top:6px;">
+                <input type="checkbox" name="important">
+                <span>Mark as important</span>
+            </label><br><br>
+            <input type="submit" value="Add note" class="btn">
+        </form>
+
+        {% if word_notes %}
+            <div class="section-title">Your notes</div>
+            {% for note in word_notes %}
+                <div class="note-card {% if note.important %}important{% endif %}">
+                    <div style="font-size:13px;">{{ note.text }}</div>
+                    <div class="note-meta">
+                        <span>{{ note.created_at }}</span>
+                        {% if note.important %}
+                            <span class="badge-important">
+                                <span>★</span> Important
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="empty-state">No notes yet for this word. Add one above.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

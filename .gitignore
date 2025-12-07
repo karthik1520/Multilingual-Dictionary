@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environments
+venv/
+env/
+
+# Logs and temp files
+*.log
+*.tmp
+
+# VS Code settings
+.vscode/
+
+# OS-specific files
+.DS_Store
+
+# Do NOT ignore your data file unless you want it private!
+# data.json   ← keep this tracked so notes/history persist

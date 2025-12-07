@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="page-title">Dictionary</div>
+        <div class="page-subtitle">Search words across languages, star your favourites, and jump back with history.</div>
+    </div>
+    <div class="pill">
+        <span class="dot"></span>
+        Multilingual · Notes-friendly
+    </div>
+</div>
+
+{% if word_of_the_day %}
+    <div class="card" style="margin-bottom: 10px;">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Word of the Day 🌤</div>
+                <div class="card-caption">
+                    Today's featured word from your curated list.
+                </div>
+            </div>
+            <span class="pill-language">
+                <span class="icon">🌐</span>
+                {{ word_of_the_day.language_label }}
+            </span>
+        </div>
+
+        <div style="margin-top: 6px;">
+            <div style="font-size:18px; font-weight:600; margin-bottom:4px;">
+                {{ word_of_the_day.word }}
+            </div>
+            {% if word_of_the_day.short_definition %}
+                <div style="font-size:13px; color: var(--muted); margin-bottom:8px;">
+                    {{ word_of_the_day.short_definition }}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    No short definition available. Click below to view full details.
+                </div>
+            {% endif %}
+
+            <a
+              class="btn btn-pill"
+              href="{{ url_for('search', word=word_of_the_day.word, language=word_of_the_day.language_code) }}"
+            >
+                <span class="btn-icon">🔍</span>
+                <span>Open full details</span>
+            </a>
+        </div>
+    </div>
+{% endif %}
+
+<div class="layout-grid">
+    <!-- Left: search + pinned/favorites -->
+    <div class="stack">
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">Search</div>
+                    <div class="card-caption">Type a word and choose the language you want to search in.</div>
+                </div>
+            </div>
+            <form action="{{ url_for('search') }}" method="post" style="display:flex; gap:8px; flex-wrap:wrap;">
+                <div style="flex:1 1 180px;">
+                    <input type="text" name="word" placeholder="Try &quot;sattva&quot; or &quot;शिव&quot; or any word..." required>
+                </div>
+                <div>
+                    <select name="language">
+                        {% for lang in languages %}
+                            <option value="{{ lang.code }}"
+                                {% if lang.code == selected_language %}selected{% endif %}>
+                                {{ lang.label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <input type="submit" value="Search" class="btn">
+                </div>
+            </form>
+        </div>
+
+        <div class="card card-subtle">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">Pinned words 📌</div>
+                    <div class="card-caption">Words you always want at hand.</div>
+                </div>
+            </div>
+            {% if pinned %}
+                <div class="chips-row">
+                    {% for w in pinned %}
+                        <a class="tag" href="{{ url_for('search', word=w, language=selected_language) }}">{{ w }}</a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="empty-state">No pinned words yet. Open a word and use the “Pin” action.</p>
+            {% endif %}
+        </div>
+
+        <div class="card card-subtle">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">Favourite words ★</div>
+                    <div class="card-caption">Words you’ve starred while exploring.</div>
+                </div>
+            </div>
+            {% if favorites %}
+                <div class="chips-row">
+                    {% for w in favorites %}
+                        <a class="tag" href="{{ url_for('search', word=w, language=selected_language) }}">{{ w }}</a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="empty-state">No favourites yet. Mark a word as favourite to see it here.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Right: history -->
+    <div class="card card-subtle">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Recent history ⏱</div>
+                <div class="card-caption">Jump back to something you looked up earlier.</div>
+            </div>
+        </div>
+        {% if history %}
+            <div class="chips-row">
+                {% for w in history %}
+                    <a class="tag" href="{{ url_for('search', word=w, language=selected_language) }}">{{ w }}</a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="empty-state">No history yet. Start by searching a word above.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="page-title">General notes</div>
+        <div class="page-subtitle">Capture thoughts that are not tied to a single word.</div>
+    </div>
+    <div class="pill">
+        <span class="dot"></span>
+        Your personal notebook
+    </div>
+</div>
+
+<div class="layout-grid">
+    <!-- Left: note editor -->
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Add a new note</div>
+                <div class="card-caption">Anything you want to remember while studying or reading.</div>
+            </div>
+        </div>
+
+        <form action="{{ url_for('notes') }}" method="post">
+            <textarea name="note_text" rows="3" placeholder="Write your note here..."></textarea><br>
+            <label class="label-inline" style="margin-top:6px;">
+                <input type="checkbox" name="important">
+                <span>Mark as important</span>
+            </label><br><br>
+            <input type="submit" value="Save note" class="btn">
+        </form>
+    </div>
+
+    <!-- Right: existing notes -->
+    <div class="card card-subtle">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Your notes</div>
+                <div class="card-caption">Important notes float visually to the top.</div>
+            </div>
+        </div>
+
+        {% if general_notes %}
+            {% for note in general_notes %}
+                <div class="note-card {% if note.important %}important{% endif %}">
+                    <div style="font-size:13px;">{{ note.text }}</div>
+                    <div class="note-meta">
+                        <span>{{ note.created_at }}</span>
+                        {% if note.important %}
+                            <span class="badge-important">
+                                <span>★</span> Important
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="empty-state">No notes yet. Use the form on the left to add your first one.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
