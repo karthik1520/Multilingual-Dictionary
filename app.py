@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 DATA_FILE = "data.json"
 
-# Languages (codes must match the Free Dictionary API)
+# Languages (codes must match the dictionary API)
 LANGUAGE_OPTIONS = [
     {"code": "en", "label": "English"},
     {"code": "hi", "label": "Hindi"},
@@ -22,25 +22,40 @@ LANGUAGE_OPTIONS = [
 
 DEFAULT_LANGUAGE = "en"
 
-# Words to use for "Word of the Day"
+# ---------- WORD LISTS ----------
+
+# Non-Sanskrit words for Word of the Day
 WORD_OF_DAY_WORDS = [
-    {"word": "sattva", "language": "sa"},     # Sanskrit
+    {"word": "serene", "language": "en"},
+    {"word": "benevolent", "language": "en"},
+    {"word": "gratitude", "language": "en"},
+    {"word": "resilient", "language": "en"},
+    {"word": "empathy", "language": "en"},
+    {"word": "सत्य", "language": "hi"},       # Hindi
+    {"word": "शक्ति", "language": "hi"},
+    {"word": "आनंद", "language": "hi"},
+    {"word": "அன்பு", "language": "ta"},     # Tamil: love
+    {"word": "அருள்", "language": "ta"},     # Tamil: grace
+    {"word": "மெய்ப்பு", "language": "ta"}    # Tamil: truth / reality (depending on context)
+]
+
+# Sanskrit study words (shown in a separate section)
+SANSKRIT_STUDY_WORDS = [
+    {"word": "sattva", "language": "sa"},
     {"word": "tamas", "language": "sa"},
     {"word": "rajas", "language": "sa"},
-    {"word": "śiva", "language": "sa"},       # also try "shiva"
+    {"word": "śiva", "language": "sa"},
     {"word": "dharma", "language": "sa"},
     {"word": "karma", "language": "sa"},
     {"word": "bhakti", "language": "sa"},
     {"word": "śānti", "language": "sa"},
-    {"word": "serene", "language": "en"},
-    {"word": "benevolent", "language": "en"},
-    {"word": "gratitude", "language": "en"},
-    {"word": "सत्य", "language": "hi"},       # Hindi
-    {"word": "शक्ति", "language": "hi"},
-    {"word": "அன்பு", "language": "ta"},     # Tamil
-    {"word": "அருள்", "language": "ta"}
+    {"word": "ātman", "language": "sa"},
+    {"word": "prakṛti", "language": "sa"},
+    {"word": "puruṣa", "language": "sa"}
 ]
 
+
+# ---------- DATA LOAD / SAVE ----------
 
 def load_data():
     """Load favorites, notes, history, etc. from data.json"""
@@ -50,13 +65,21 @@ def load_data():
             "pinned": [],
             "history": [],
             "general_notes": [],
-            "word_notes": {}
+            "word_notes": {},
+            "word_tags": {}   # NEW: tags for words
         }
         save_data(data)
         return data
 
     with open(DATA_FILE, "r", encoding="utf-8") as f:
-        return json.load(f)
+        data = json.load(f)
+
+    # Backwards compatibility: if old data.json has no word_tags
+    if "word_tags" not in data:
+        data["word_tags"] = {}
+        save_data(data)
+
+    return data
 
 
 def save_data(data):
@@ -65,13 +88,12 @@ def save_data(data):
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 
+# ---------- DICTIONARY LOOKUP (WEB API) ----------
+
 def get_word_info(word, language_code):
     """
-    Look up a word in many languages using FreeDictionaryAPI.com.
-
-    Docs: https://freedictionaryapi.com
-    Endpoint pattern:
-      GET https://freedictionaryapi.com/api/v1/entries/{language}/{word}?translations=true
+    Look up a word using an online dictionary API (Wiktionary-based style).
+    All definitions come from the API, not from hand-written text.
     """
     base_url = "https://freedictionaryapi.com/api/v1/entries"
     url = f"{base_url}/{language_code}/{word}?translations=true"
@@ -91,9 +113,9 @@ def get_word_info(word, language_code):
 
     # Expected main shape:
     # {
-    #   "word": "sattva",
+    #   "word": "...",
     #   "entries": [...],
-    #   "source": { "url": "...", "license": { ... } }
+    #   "source": { "url": "...", ... }
     # }
 
     word_text = data.get("word", word)
@@ -135,7 +157,7 @@ def get_word_info(word, language_code):
             for s in sense.get("synonyms", []):
                 all_synonyms.add(s)
 
-            # Translations (optional)
+            # Optional translations
             for t in sense.get("translations", []):
                 t_lang = t.get("language", {})
                 all_translations.append({
@@ -143,6 +165,9 @@ def get_word_info(word, language_code):
                     "language_name": t_lang.get("name"),
                     "word": t.get("word")
                 })
+
+    if not all_definitions:
+        return None
 
     return {
         "word": word_text,
@@ -154,10 +179,11 @@ def get_word_info(word, language_code):
     }
 
 
+# ---------- WORD OF THE DAY + SANSKRIT STUDY WORD ----------
+
 def get_word_of_the_day():
     """
-    Pick one word from WORD_OF_DAY_WORDS based on today's date,
-    and fetch its info using get_word_info.
+    Pick one non-Sanskrit word from WORD_OF_DAY_WORDS based on today's date.
     """
     if not WORD_OF_DAY_WORDS:
         return None
@@ -171,14 +197,13 @@ def get_word_of_the_day():
 
     info = get_word_info(word, language_code)
 
-    # Find a pretty language label for display (e.g. "Sanskrit" instead of "sa")
+    # Find a user-friendly language label
     language_label = language_code
     for lang in LANGUAGE_OPTIONS:
         if lang["code"] == language_code:
             language_label = lang["label"]
             break
 
-    # Get a short preview definition if possible
     short_definition = None
     if info and info.get("definitions"):
         first_def = info["definitions"][0]
@@ -192,6 +217,45 @@ def get_word_of_the_day():
     }
 
 
+def get_sanskrit_study_word():
+    """
+    Pick one Sanskrit word from SANSKRIT_STUDY_WORDS based on today's date.
+    This is shown in a separate section so you can learn Sanskrit terms separately.
+    """
+    if not SANSKRIT_STUDY_WORDS:
+        return None
+
+    today = date.today()
+    index = today.toordinal() % len(SANSKRIT_STUDY_WORDS)
+    entry = SANSKRIT_STUDY_WORDS[index]
+
+    word = entry["word"]
+    language_code = entry["language"]  # should be "sa"
+
+    info = get_word_info(word, language_code)
+
+    # language_label should be "Sanskrit"
+    language_label = language_code
+    for lang in LANGUAGE_OPTIONS:
+        if lang["code"] == language_code:
+            language_label = lang["label"]
+            break
+
+    short_definition = None
+    if info and info.get("definitions"):
+        first_def = info["definitions"][0]
+        short_definition = first_def.get("definition")
+
+    return {
+        "word": word,
+        "language_code": language_code,
+        "language_label": language_label,
+        "short_definition": short_definition
+    }
+
+
+# ---------- ROUTES ----------
+
 @app.route("/", methods=["GET"])
 def home():
     data = load_data()
@@ -200,6 +264,7 @@ def home():
     pinned = data["pinned"]
 
     word_of_the_day = get_word_of_the_day()
+    sanskrit_study_word = get_sanskrit_study_word()
 
     return render_template(
         "home.html",
@@ -209,6 +274,7 @@ def home():
         languages=LANGUAGE_OPTIONS,
         selected_language=DEFAULT_LANGUAGE,
         word_of_the_day=word_of_the_day,
+        sanskrit_study_word=sanskrit_study_word,
     )
 
 
@@ -221,7 +287,6 @@ def search():
         language = request.form.get("language", DEFAULT_LANGUAGE).strip() or DEFAULT_LANGUAGE
         if not word:
             return redirect(url_for("home"))
-        # Redirect to GET with query parameters
         return redirect(url_for("search", word=word, language=language))
 
     # GET request (after redirect)
@@ -244,6 +309,9 @@ def search():
     word_notes = data["word_notes"].get(word, [])
     word_notes_sorted = sorted(word_notes, key=lambda n: n["important"], reverse=True)
 
+    # Tags for this word
+    word_tags = data["word_tags"].get(word, [])
+
     return render_template(
         "word.html",
         word=word,
@@ -253,6 +321,7 @@ def search():
         word_notes=word_notes_sorted,
         languages=LANGUAGE_OPTIONS,
         selected_language=language,
+        word_tags=word_tags,
     )
 
 
@@ -326,6 +395,25 @@ def add_word_note(language, word):
     return redirect(url_for("search", word=word, language=language))
 
 
+@app.route("/word/<language>/<word>/add_tag", methods=["POST"])
+def add_word_tag(language, word):
+    data = load_data()
+    tag_text = request.form.get("tag_text", "").strip()
+
+    if tag_text:
+        # Normalize tag: lower-case, collapse spaces
+        normalized = " ".join(tag_text.lower().split())
+        if normalized:
+            if "word_tags" not in data:
+                data["word_tags"] = {}
+            if word not in data["word_tags"]:
+                data["word_tags"][word] = []
+            if normalized not in data["word_tags"][word]:
+                data["word_tags"][word].append(normalized)
+                save_data(data)
+
+    return redirect(url_for("search", word=word, language=language))
+
+
 if __name__ == "__main__":
-    # debug=True is handy while developing
     app.run(debug=True)

@@ -4,7 +4,7 @@
 <div class="page-header">
     <div>
         <div class="page-title">Word details</div>
-        <div class="page-subtitle">See meanings, examples, synonyms, translations, and jot down notes.</div>
+        <div class="page-subtitle">See meanings, examples, synonyms, translations, add tags, and jot down notes.</div>
     </div>
     <div class="pill">
         <span class="dot"></span>
@@ -13,7 +13,7 @@
 </div>
 
 <div class="layout-grid-wide">
-    <!-- Left: word + meanings -->
+    <!-- Left: word + meanings + tags -->
     <div class="card">
         <div class="word-heading">
             <div class="word-main">
@@ -29,7 +29,7 @@
                     </span>
                     {% if info and info.source_url %}
                         <a href="{{ info.source_url }}" target="_blank" class="small-link">
-                            View on Wiktionary → 
+                            View on source → 
                         </a>
                     {% endif %}
                 </div>
@@ -68,6 +68,33 @@
             </form>
         </div>
 
+        {# ---------- Tags section ---------- #}
+        <div style="margin-top:16px; padding-top:12px; border-top:1px solid var(--border-subtle);">
+            <div class="section-title">Tags for this word</div>
+
+            {% if word_tags %}
+                <div class="chips-row" style="margin-bottom:8px;">
+                    {% for tag in word_tags %}
+                        <span class="tag">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="empty-state" style="margin-bottom:8px;">
+                    No tags yet. Add some labels like <em>spiritual</em>, <em>exam</em>, <em>daily</em>, etc.
+                </p>
+            {% endif %}
+
+            <form action="{{ url_for('add_word_tag', language=selected_language, word=word) }}" method="post" style="display:flex; gap:8px; flex-wrap:wrap;">
+                <div style="flex:1 1 160px;">
+                    <input type="text" name="tag_text" placeholder="Add a tag (e.g. spiritual, exam, daily)">
+                </div>
+                <div>
+                    <input type="submit" value="Add tag" class="btn">
+                </div>
+            </form>
+        </div>
+
+        {# ---------- Meanings, examples, etc. ---------- #}
         {% if info %}
             <div style="margin-top:18px;">
                 <div class="section-title">Meanings</div>
@@ -128,8 +155,7 @@
     <div class="card card-subtle">
         <div class="card-header">
             <div>
-                <div class="card-title">Notes for “{{ word }}”
-                </div>
+                <div class="card-title">Notes for “{{ word }}”</div>
                 <div class="card-caption">Use this area to store personal meanings, associations, or mnemonics.</div>
             </div>
             <span class="badge-important">

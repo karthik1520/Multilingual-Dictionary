@@ -12,13 +12,14 @@
     </div>
 </div>
 
+{# ---------- Word of the Day (non-Sanskrit) ---------- #}
 {% if word_of_the_day %}
     <div class="card" style="margin-bottom: 10px;">
         <div class="card-header">
             <div>
                 <div class="card-title">Word of the Day 🌤</div>
                 <div class="card-caption">
-                    Today's featured word from your curated list.
+                    A daily word from your non-Sanskrit list.
                 </div>
             </div>
             <span class="pill-language">
@@ -37,7 +38,7 @@
                 </div>
             {% else %}
                 <div class="empty-state">
-                    No short definition available. Click below to view full details.
+                    No short definition available from the API. Click below to view full details.
                 </div>
             {% endif %}
 
@@ -47,6 +48,47 @@
             >
                 <span class="btn-icon">🔍</span>
                 <span>Open full details</span>
+            </a>
+        </div>
+    </div>
+{% endif %}
+
+{# ---------- Separate Sanskrit study word section ---------- #}
+{% if sanskrit_study_word %}
+    <div class="card card-subtle" style="margin-bottom: 10px;">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Sanskrit study word 🕉</div>
+                <div class="card-caption">
+                    Learn one Sanskrit term each day, separately from the main Word of the Day.
+                </div>
+            </div>
+            <span class="pill-language">
+                <span class="icon">🔤</span>
+                {{ sanskrit_study_word.language_label }}
+            </span>
+        </div>
+
+        <div style="margin-top: 6px;">
+            <div style="font-size:18px; font-weight:600; margin-bottom:4px;">
+                {{ sanskrit_study_word.word }}
+            </div>
+            {% if sanskrit_study_word.short_definition %}
+                <div style="font-size:13px; color: var(--muted); margin-bottom:8px;">
+                    {{ sanskrit_study_word.short_definition }}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    No short definition available from the API. Click below to explore it.
+                </div>
+            {% endif %}
+
+            <a
+              class="btn btn-pill"
+              href="{{ url_for('search', word=sanskrit_study_word.word, language=sanskrit_study_word.language_code) }}"
+            >
+                <span class="btn-icon">🕵️‍♀️</span>
+                <span>Study this Sanskrit word</span>
             </a>
         </div>
     </div>
@@ -64,7 +106,7 @@
             </div>
             <form action="{{ url_for('search') }}" method="post" style="display:flex; gap:8px; flex-wrap:wrap;">
                 <div style="flex:1 1 180px;">
-                    <input type="text" name="word" placeholder="Try &quot;sattva&quot; or &quot;शिव&quot; or any word..." required>
+                    <input type="text" name="word" placeholder="Try &quot;gratitude&quot;, &quot;शक्ति&quot;, or any word..." required>
                 </div>
                 <div>
                     <select name="language">
