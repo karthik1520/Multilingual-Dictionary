@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="page-title">Backup & export</div>
+        <div class="page-subtitle">
+            Download your favourites, pinned words, notes, and tags so you never lose them.
+        </div>
+    </div>
+    <div class="pill">
+        <span class="dot"></span>
+        Safety copy
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div>
+            <div class="card-title">Your data summary</div>
+            <div class="card-caption">
+                So far you have:
+            </div>
+        </div>
+    </div>
+    <ul>
+        <li>{{ total_words }} words in your personal dictionary</li>
+        <li>{{ total_notes }} total notes (general + per-word)</li>
+        <li>{{ total_tags }} unique tags</li>
+    </ul>
+</div>
+
+<div class="card card-subtle">
+    <div class="card-header">
+        <div>
+            <div class="card-title">Download backups</div>
+            <div class="card-caption">Choose the format that’s most useful to you.</div>
+        </div>
+    </div>
+
+    <div style="display:flex; flex-wrap:wrap; gap:10px;">
+        <a href="{{ url_for('export_json') }}" class="btn btn-pill">
+            <span class="btn-icon">📥</span>
+            <span>Download JSON backup</span>
+        </a>
+
+        <a href="{{ url_for('export_text') }}" class="btn btn-pill btn-ghost">
+            <span class="btn-icon">📄</span>
+            <span>Download text summary</span>
+        </a>
+    </div>
+
+    <p class="muted-text" style="font-size:11px; margin-top:10px;">
+        JSON is great if you want to restore or process the data with code later.  
+        The text summary is easy to read and can be stored in your notes, email, or cloud drive.
+    </p>
+</div>
+{% endblock %}

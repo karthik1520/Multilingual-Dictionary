@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="page-title">My Dictionary</div>
+        <div class="page-subtitle">Your personal dictionary — all words you’ve explored with meanings, tags, notes & quick actions.</div>
+    </div>
+    <div class="pill">
+        <span class="dot"></span>
+        Enhanced view
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div>
+            <div class="card-title">Filter by tag</div>
+            <div class="card-caption">Choose a category like <em>english</em>, <em>sanskrit</em>, <em>spiritual</em>, <em>exam</em>, etc.</div>
+        </div>
+    </div>
+
+    {% if all_tags %}
+        <div class="chips-row">
+            <a class="tag"
+               href="{{ url_for('dictionary') }}"
+               style="border-style:dashed;{% if not selected_tag %} background:rgba(79,70,229,0.3);{% endif %}">
+                all
+            </a>
+            {% for tag in all_tags %}
+                <a class="tag"
+                   href="{{ url_for('dictionary', tag=tag) }}"
+                   {% if selected_tag == tag %}
+                       style="background:rgba(79,70,229,0.3);"
+                   {% endif %}
+                >{{ tag }}</a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="empty-state">No tags yet. Search a few words and add tags on their pages.</p>
+    {% endif %}
+</div>
+
+<!-- MAIN LIST -->
+<div class="card card-subtle">
+    <div class="card-header">
+        <div class="card-title">
+            {% if selected_tag %}
+                Words tagged “{{ selected_tag }}”
+            {% else %}
+                All known words
+            {% endif %}
+        </div>
+        <div class="card-caption">Click a word to open full details.</div>
+    </div>
+
+    {% if words %}
+        <div class="stack">
+            {% for item in words %}
+                <div class="card" style="padding:14px 16px;">
+                    <div class="word-heading">
+                        <div class="word-main">
+                            <div class="word-main-title">{{ item.word }}</div>
+
+                            <!-- small audio icon -->
+                            <button type="button"
+                                    class="btn btn-ghost btn-pill"
+                                    style="padding:3px 9px; font-size:11px;"
+                                    title="Pronounce"
+                                    data-speak-word="{{ item.word }}"
+                                    data-speak-lang="{{ item.language_code }}">
+                                🔊
+                            </button>
+
+                            {% if item.is_pinned %}
+                                <span class="tag">📌 pinned</span>
+                            {% endif %}
+                            {% if item.is_favorite %}
+                                <span class="tag">★ favourite</span>
+                            {% endif %}
+                        </div>
+
+                        <div>
+                            <!-- pin -->
+                            {% if item.is_pinned %}
+                                <a class="small-link" href="{{ url_for('toggle_pin', language=item.language_code, word=item.word) }}">Unpin</a>
+                            {% else %}
+                                <a class="small-link" href="{{ url_for('toggle_pin', language=item.language_code, word=item.word) }}">Pin</a>
+                            {% endif %}
+
+                            &nbsp;·&nbsp;
+
+                            <!-- favourite -->
+                            {% if item.is_favorite %}
+                                <a class="small-link" href="{{ url_for('toggle_favorite', language=item.language_code, word=item.word) }}">Unfavourite</a>
+                            {% else %}
+                                <a class="small-link" href="{{ url_for('toggle_favorite', language=item.language_code, word=item.word) }}">Favourite</a>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- meaning snippet -->
+                    {% if item.short_definition %}
+                        <p style="margin-top:5px; font-size:13px; color:var(--muted);">
+                            {{ item.short_definition }}
+                        </p>
+                    {% else %}
+                        <p class="empty-state" style="margin-top:5px;">
+                            No short meaning available; click below for full details.
+                        </p>
+                    {% endif %}
+
+                    <!-- tags -->
+                    {% if item.tags %}
+                        <div class="chips-row">
+                            {% for t in item.tags %}
+                                <span class="tag">{{ t }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <a class="btn btn-pill" style="margin-top:8px;"
+                       href="{{ url_for('search', word=item.word, language=item.language_code) }}">
+                        Open full details →
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="empty-state">No words found.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

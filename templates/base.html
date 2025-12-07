@@ -24,9 +24,7 @@
             --danger: #f97373;
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
@@ -36,14 +34,8 @@
             color: var(--text);
         }
 
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
+        a { color: inherit; text-decoration: none; }
+        a:hover { text-decoration: underline; }
 
         .app-shell {
             max-width: 1120px;
@@ -67,47 +59,21 @@
             backdrop-filter: blur(18px);
         }
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+        .brand { display: flex; align-items: center; gap: 12px; }
 
         .brand-logo {
-            width: 34px;
-            height: 34px;
+            width: 34px; height: 34px;
             border-radius: 999px;
             background: conic-gradient(from 180deg, #6366f1, #22c55e, #ec4899, #6366f1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             box-shadow: 0 0 0 2px rgba(15,23,42,0.6);
         }
+        .brand-logo span { font-size: 18px; font-weight: 700; color: #0b1120; }
 
-        .brand-logo span {
-            font-size: 18px;
-            font-weight: 700;
-            color: #0b1120;
-        }
+        .brand-text h1 { font-size: 18px; font-weight: 600; margin: 0; }
+        .brand-text p { margin: 0; font-size: 12px; color: #c4d0ff; }
 
-        .brand-text h1 {
-            font-size: 18px;
-            font-weight: 600;
-            margin: 0;
-        }
-
-        .brand-text p {
-            margin: 0;
-            font-size: 12px;
-            color: #c4d0ff;
-        }
-
-        nav {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-        }
+        nav { display: flex; align-items: center; gap: 8px; font-size: 13px; flex-wrap: wrap; }
 
         .nav-link {
             padding: 6px 10px;
@@ -120,64 +86,33 @@
             cursor: pointer;
             background: transparent;
         }
-
         .nav-link:hover {
             border-color: rgba(209, 213, 219, 0.4);
             background: rgba(15, 23, 42, 0.45);
         }
-
         .nav-link.primary {
             background: rgba(15,23,42,0.25);
             border-color: rgba(191, 219, 254, 0.6);
         }
+        .nav-link span.icon { font-size: 15px; }
 
-        .nav-link span.icon {
-            font-size: 15px;
-        }
-
-        .container {
-            margin-top: 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
+        .container { margin-top: 8px; display: flex; flex-direction: column; gap: 16px; }
 
         .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            gap: 12px;
-            flex-wrap: wrap;
+            display: flex; justify-content: space-between; align-items: flex-end;
+            gap: 12px; flex-wrap: wrap;
         }
-
-        .page-title {
-            font-size: 22px;
-            font-weight: 600;
-        }
-
-        .page-subtitle {
-            font-size: 13px;
-            color: var(--muted);
-        }
+        .page-title { font-size: 22px; font-weight: 600; }
+        .page-subtitle { font-size: 13px; color: var(--muted); }
 
         .pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 10px;
-            border-radius: 999px;
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 4px 10px; border-radius: 999px;
             font-size: 11px;
             border: 1px solid rgba(148, 163, 184, 0.5);
-            color: var(--muted);
-            background: rgba(15, 23, 42, 0.7);
+            color: var(--muted); background: rgba(15, 23, 42, 0.7);
         }
-
-        .pill .dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 999px;
-            background: #22c55e;
-        }
+        .pill .dot { width: 7px; height: 7px; border-radius: 999px; background: #22c55e; }
 
         .layout-grid {
             display: grid;
@@ -185,18 +120,12 @@
             gap: 18px;
             align-items: flex-start;
         }
-
         .layout-grid-wide {
             display: grid;
             grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
             gap: 18px;
         }
-
-        .stack {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
+        .stack { display: flex; flex-direction: column; gap: 16px; }
 
         .card {
             background: radial-gradient(circle at top left, rgba(37,99,235,0.14), rgba(15,23,42,0.96));
@@ -205,52 +134,26 @@
             border: 1px solid var(--border-subtle);
             box-shadow: 0 16px 45px rgba(15,23,42,0.9);
         }
-
-        .card-subtle {
-            background: rgba(15, 23, 42, 0.9);
-        }
+        .card-subtle { background: rgba(15, 23, 42, 0.9); }
 
         .card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 10px;
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 10px; margin-bottom: 10px;
         }
+        .card-title { font-size: 15px; font-weight: 500; }
+        .card-caption { font-size: 12px; color: var(--muted); }
 
-        .card-title {
-            font-size: 15px;
-            font-weight: 500;
-        }
-
-        .card-caption {
-            font-size: 12px;
-            color: var(--muted);
-        }
-
-        .section-title {
-            font-size: 14px;
-            font-weight: 500;
-            margin: 14px 0 6px;
-        }
-
-        .muted-text {
-            font-size: 12px;
-            color: var(--muted);
-        }
+        .section-title { font-size: 14px; font-weight: 500; margin: 14px 0 6px; }
+        .muted-text { font-size: 12px; color: var(--muted); }
 
         .tag {
-            display: inline-flex;
-            align-items: center;
-            padding: 4px 10px;
-            margin: 3px;
+            display: inline-flex; align-items: center;
+            padding: 4px 10px; margin: 3px;
             border-radius: 999px;
             background: rgba(15,23,42,0.9);
             border: 1px solid rgba(148, 163, 184, 0.5);
-            font-size: 12px;
-            color: #e5e7eb;
+            font-size: 12px; color: #e5e7eb;
         }
-
         .tag:hover {
             border-color: var(--accent);
             background: rgba(79,70,229,0.4);
@@ -273,7 +176,6 @@
             cursor: pointer;
             transition: 0.15s ease all;
         }
-
         .btn:hover,
         button:hover,
         input[type="submit"]:hover {
@@ -281,19 +183,9 @@
             background: var(--accent-strong);
             color: white;
         }
-
-        .btn-ghost {
-            background: transparent;
-            border-color: rgba(148, 163, 184, 0.5);
-        }
-
-        .btn-pill {
-            border-radius: 999px;
-        }
-
-        .btn-icon {
-            font-size: 15px;
-        }
+        .btn-ghost { background: transparent; border-color: rgba(148, 163, 184, 0.5); }
+        .btn-pill { border-radius: 999px; }
+        .btn-icon { font-size: 15px; }
 
         input[type="text"],
         select,
@@ -307,43 +199,25 @@
             color: var(--text);
             outline: none;
         }
-
         input[type="text"]:focus,
         select:focus,
         textarea:focus {
             border-color: var(--accent);
             box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.6);
         }
-
-        input[type="text"] {
-            width: 100%;
-        }
-
-        textarea {
-            width: 100%;
-            min-height: 90px;
-            resize: vertical;
-        }
+        input[type="text"] { width: 100%; }
+        textarea { width: 100%; min-height: 90px; resize: vertical; }
 
         .label-inline {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            color: var(--muted);
-            cursor: pointer;
+            display: inline-flex; align-items: center;
+            gap: 6px; font-size: 12px;
+            color: var(--muted); cursor: pointer;
         }
 
-        .chips-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
+        .chips-row { display: flex; flex-wrap: wrap; gap: 6px; }
 
         .pill-language {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
+            display: inline-flex; align-items: center; gap: 6px;
             padding: 4px 9px;
             border-radius: 999px;
             font-size: 11px;
@@ -351,10 +225,7 @@
             color: #c7d2fe;
             border: 1px solid rgba(129, 140, 248, 0.7);
         }
-
-        .pill-language span.icon {
-            font-size: 14px;
-        }
+        .pill-language span.icon { font-size: 14px; }
 
         .word-heading {
             display: flex;
@@ -363,29 +234,15 @@
             justify-content: space-between;
             gap: 10px;
         }
-
         .word-main {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: baseline;
-            gap: 8px;
+            display: flex; flex-wrap: wrap;
+            align-items: baseline; gap: 8px;
         }
-
-        .word-main-title {
-            font-size: 24px;
-            font-weight: 600;
-        }
-
-        .word-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
+        .word-main-title { font-size: 24px; font-weight: 600; }
+        .word-meta { display: flex; flex-wrap: wrap; gap: 6px; }
 
         .badge-important {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
+            display: inline-flex; align-items: center; gap: 6px;
             font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -403,54 +260,31 @@
             border: 1px solid rgba(75, 85, 99, 0.8);
             margin-bottom: 8px;
         }
-
         .note-card.important {
             border-color: #fbbf24;
             box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.3);
         }
-
         .note-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 6px;
-            font-size: 11px;
-            color: var(--muted);
+            display: flex; justify-content: space-between;
+            align-items: center; gap: 6px;
+            font-size: 11px; color: var(--muted);
             margin-top: 4px;
         }
 
-        ul {
-            padding-left: 18px;
-            margin: 0;
-        }
+        ul { padding-left: 18px; margin: 0; }
+        ul li { margin-bottom: 4px; font-size: 13px; }
 
-        ul li {
-            margin-bottom: 4px;
-            font-size: 13px;
-        }
+        .small-link { font-size: 12px; color: #a5b4fc; }
+        .small-link:hover { color: #c7d2fe; }
 
-        .small-link {
-            font-size: 12px;
-            color: #a5b4fc;
-        }
-
-        .small-link:hover {
-            color: #c7d2fe;
-        }
-
-        .empty-state {
-            font-size: 13px;
-            color: var(--muted);
-        }
+        .empty-state { font-size: 13px; color: var(--muted); }
 
         /* ---- History layout ---- */
-
         .history-list {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
         }
-
         .history-item {
             display: inline-flex;
             align-items: center;
@@ -460,10 +294,7 @@
             background: rgba(15,23,42,0.9);
             border: 1px solid rgba(75,85,99,0.7);
         }
-
-        .history-item .tag {
-            margin: 0;
-        }
+        .history-item .tag { margin: 0; }
 
         .history-delete-btn {
             border: none;
@@ -479,12 +310,10 @@
             color: var(--muted);
             padding: 0;
         }
-
         .history-delete-btn:hover {
             background: rgba(239,68,68,0.15);
             color: #fecaca;
         }
-
         .clear-history-btn {
             white-space: nowrap;
             font-size: 11px;
@@ -492,19 +321,55 @@
             border-radius: 999px;
         }
 
+        /* ---- Audio settings panel ---- */
+        .audio-settings-panel {
+            position: fixed;
+            bottom: 16px;
+            right: 16px;
+            width: 260px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: radial-gradient(circle at top left, rgba(79,70,229,0.25), rgba(15,23,42,0.96));
+            border: 1px solid rgba(129,140,248,0.7);
+            box-shadow: 0 18px 40px rgba(15,23,42,0.9);
+            font-size: 12px;
+            z-index: 50;
+        }
+        .audio-settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .audio-settings-header-title {
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .audio-settings-close {
+            border: none;
+            background: transparent;
+            color: var(--muted);
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .audio-settings-close:hover {
+            color: #fee2e2;
+        }
+        #audio-voice-select {
+            width: 100%;
+            margin-top: 4px;
+            font-size: 12px;
+        }
+
         @media (max-width: 900px) {
             .layout-grid,
-            .layout-grid-wide {
-                grid-template-columns: minmax(0, 1fr);
-            }
-
-            header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .brand-text h1 {
-                font-size: 16px;
+            .layout-grid-wide { grid-template-columns: minmax(0, 1fr); }
+            header { flex-direction: column; align-items: flex-start; }
+            .brand-text h1 { font-size: 16px; }
+            .audio-settings-panel {
+                right: 12px;
+                left: 12px;
+                width: auto;
             }
         }
     </style>
@@ -522,22 +387,30 @@
             </div>
         </div>
         <nav>
-            <!-- Home button -->
             <a class="nav-link primary" href="{{ url_for('home') }}">
                 <span class="icon">🏠</span>
                 <span>Home</span>
             </a>
-
-            <!-- Notes page -->
             <a class="nav-link" href="{{ url_for('notes') }}">
                 <span class="icon">📝</span>
                 <span>General Notes</span>
             </a>
-
-            <!-- Overall search page -->
             <a class="nav-link" href="{{ url_for('search_all') }}">
                 <span class="icon">🔎</span>
                 <span>Search All</span>
+            </a>
+            <a class="nav-link" href="{{ url_for('dictionary') }}">
+                <span class="icon">📖</span>
+                <span>Dictionary</span>
+            </a>
+            <a class="nav-link" href="{{ url_for('backup') }}">
+                <span class="icon">📂</span>
+                <span>Backup</span>
+            </a>
+            <!-- Audio settings toggle -->
+            <a class="nav-link" href="javascript:void(0)" id="audio-settings-toggle">
+                <span class="icon">🔊</span>
+                <span>Audio</span>
             </a>
         </nav>
     </header>
@@ -545,6 +418,195 @@
     <div class="container">
         {% block content %}{% endblock %}
     </div>
+
+    <!-- Audio settings floating panel -->
+    <div id="audio-settings-panel" class="audio-settings-panel" style="display:none;">
+        <div class="audio-settings-header">
+            <div class="audio-settings-header-title">Audio settings</div>
+            <button type="button" class="audio-settings-close" id="audio-settings-close" title="Close">
+                ✕
+            </button>
+        </div>
+        <label class="label-inline">
+            <input type="checkbox" id="audio-enabled-toggle">
+            <span>Enable pronunciation</span>
+        </label>
+
+        <div style="margin-top:8px;">Preferred voice</div>
+        <select id="audio-voice-select">
+            <option value="">Auto (best match)</option>
+        </select>
+        <p class="muted-text" style="font-size:11px; margin-top:6px;">
+            Voices come from your browser / operating system.
+        </p>
+    </div>
 </div>
+
+<!-- Audio pronunciation script -->
+<script>
+(function () {
+    if (!("speechSynthesis" in window)) {
+        // No speech support: hide audio controls, do nothing.
+        var audioToggle = document.getElementById("audio-settings-toggle");
+        if (audioToggle) audioToggle.style.display = "none";
+        var panel = document.getElementById("audio-settings-panel");
+        if (panel) panel.style.display = "none";
+        return;
+    }
+
+    const STORAGE_ENABLED_KEY = "lexinotes_audio_enabled";
+    const STORAGE_VOICE_KEY = "lexinotes_voice_name";
+
+    let audioEnabled = true;
+    let preferredVoiceName = null;
+
+    // Load saved settings
+    try {
+        const savedEnabled = localStorage.getItem(STORAGE_ENABLED_KEY);
+        if (savedEnabled !== null) {
+            audioEnabled = savedEnabled === "true";
+        }
+        const savedVoice = localStorage.getItem(STORAGE_VOICE_KEY);
+        if (savedVoice) preferredVoiceName = savedVoice;
+    } catch (e) {
+        // ignore storage errors
+    }
+
+    function mapLangCode(langCode) {
+        switch (langCode) {
+            case "en": return "en-US";
+            case "hi": return "hi-IN";
+            case "sa": return "hi-IN";   // Sanskrit -> Hindi fallback
+            case "ta": return "ta-IN";
+            case "es": return "es-ES";
+            case "fr": return "fr-FR";
+            case "de": return "de-DE";
+            default:  return "en-US";
+        }
+    }
+
+    function pickVoice(targetLang) {
+        const voices = window.speechSynthesis.getVoices();
+        if (!voices || !voices.length) return null;
+
+        // 1) If user picked a preferred voice, try that first
+        if (preferredVoiceName) {
+            const chosen = voices.find(v => v.name === preferredVoiceName);
+            if (chosen) return chosen;
+        }
+
+        // 2) Exact language match
+        let voice = voices.find(v => v.lang === targetLang);
+        if (voice) return voice;
+
+        // 3) Match by base language (e.g., "en")
+        const base = targetLang.split("-")[0];
+        voice = voices.find(v => v.lang && v.lang.startsWith(base));
+        return voice || voices[0];
+    }
+
+    function speakWord(word, langCode) {
+        if (!audioEnabled) return;
+        if (!word) return;
+
+        const targetLang = mapLangCode(langCode);
+        const utter = new SpeechSynthesisUtterance(word);
+        utter.lang = targetLang;
+
+        const voice = pickVoice(targetLang);
+        if (voice) {
+            utter.voice = voice;
+            utter.lang = voice.lang;
+        }
+
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(utter);
+    }
+
+    function initPronounceButtons() {
+        document.querySelectorAll("[data-speak-word]").forEach(btn => {
+            if (btn._lexiHasListener) return; // avoid double-binding
+            btn._lexiHasListener = true;
+            btn.addEventListener("click", function () {
+                const word = btn.getAttribute("data-speak-word");
+                const lang = btn.getAttribute("data-speak-lang") || "en";
+                speakWord(word, lang);
+            });
+        });
+    }
+
+    function populateVoiceSelect() {
+        const select = document.getElementById("audio-voice-select");
+        if (!select) return;
+
+        const voices = window.speechSynthesis.getVoices();
+        // Clear existing, keep first "auto" option
+        const keepFirst = select.options[0];
+        select.innerHTML = "";
+        select.appendChild(keepFirst);
+
+        voices.forEach(v => {
+            const opt = document.createElement("option");
+            opt.value = v.name;
+            opt.textContent = v.name + " (" + v.lang + ")";
+            if (v.name === preferredVoiceName) {
+                opt.selected = true;
+            }
+            select.appendChild(opt);
+        });
+    }
+
+    function initSettingsPanel() {
+        const panel = document.getElementById("audio-settings-panel");
+        const toggleLink = document.getElementById("audio-settings-toggle");
+        const closeBtn = document.getElementById("audio-settings-close");
+        const enabledToggle = document.getElementById("audio-enabled-toggle");
+        const voiceSelect = document.getElementById("audio-voice-select");
+
+        if (!panel || !toggleLink || !enabledToggle || !voiceSelect) return;
+
+        // Initial checkbox state
+        enabledToggle.checked = audioEnabled;
+
+        toggleLink.addEventListener("click", function () {
+            panel.style.display = (panel.style.display === "none" || !panel.style.display)
+                ? "block" : "none";
+        });
+        closeBtn.addEventListener("click", function () {
+            panel.style.display = "none";
+        });
+
+        enabledToggle.addEventListener("change", function () {
+            audioEnabled = enabledToggle.checked;
+            try {
+                localStorage.setItem(STORAGE_ENABLED_KEY, audioEnabled ? "true" : "false");
+            } catch (e) {}
+        });
+
+        voiceSelect.addEventListener("change", function () {
+            const val = voiceSelect.value || "";
+            preferredVoiceName = val || null;
+            try {
+                if (val) {
+                    localStorage.setItem(STORAGE_VOICE_KEY, val);
+                } else {
+                    localStorage.removeItem(STORAGE_VOICE_KEY);
+                }
+            } catch (e) {}
+        });
+    }
+
+    window.addEventListener("DOMContentLoaded", function () {
+        initPronounceButtons();
+        initSettingsPanel();
+        populateVoiceSelect();
+        // Voices may load later
+        window.speechSynthesis.onvoiceschanged = function () {
+            populateVoiceSelect();
+            initPronounceButtons();
+        };
+    });
+})();
+</script>
 </body>
 </html>

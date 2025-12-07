@@ -22,10 +22,21 @@
                     A daily word from your non-Sanskrit list.
                 </div>
             </div>
-            <span class="pill-language">
-                <span class="icon">🌐</span>
-                {{ word_of_the_day.language_label }}
-            </span>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <span class="pill-language">
+                    <span class="icon">🌐</span>
+                    {{ word_of_the_day.language_label }}
+                </span>
+                <!-- small audio icon -->
+                <button type="button"
+                        class="btn btn-ghost btn-pill"
+                        style="padding:3px 9px; font-size:11px;"
+                        title="Pronounce"
+                        data-speak-word="{{ word_of_the_day.word }}"
+                        data-speak-lang="{{ word_of_the_day.language_code }}">
+                    🔊
+                </button>
+            </div>
         </div>
 
         <div style="margin-top: 6px;">
@@ -63,10 +74,21 @@
                     Learn one Sanskrit term each day, separately from the main Word of the Day.
                 </div>
             </div>
-            <span class="pill-language">
-                <span class="icon">🔤</span>
-                {{ sanskrit_study_word.language_label }}
-            </span>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <span class="pill-language">
+                    <span class="icon">🔤</span>
+                    {{ sanskrit_study_word.language_label }}
+                </span>
+                <!-- small audio icon -->
+                <button type="button"
+                        class="btn btn-ghost btn-pill"
+                        style="padding:3px 9px; font-size:11px;"
+                        title="Pronounce"
+                        data-speak-word="{{ sanskrit_study_word.word }}"
+                        data-speak-lang="{{ sanskrit_study_word.language_code }}">
+                    🔊
+                </button>
+            </div>
         </div>
 
         <div style="margin-top: 6px;">
@@ -95,7 +117,7 @@
 {% endif %}
 
 <div class="layout-grid">
-    <!-- Left: search + pinned/favorites -->
+    <!-- Left: search + pinned/favorites + tags -->
     <div class="stack">
         <div class="card">
             <div class="card-header">
@@ -157,6 +179,28 @@
                 </div>
             {% else %}
                 <p class="empty-state">No favourites yet. Mark a word as favourite to see it here.</p>
+            {% endif %}
+        </div>
+
+        <div class="card card-subtle">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">Browse by tags 🏷</div>
+                    <div class="card-caption">Click a tag to see all words in that category.</div>
+                </div>
+                <a href="{{ url_for('dictionary') }}" class="small-link">Open full dictionary →</a>
+            </div>
+            {% if all_tags %}
+                <div class="chips-row">
+                    {% for tag in all_tags %}
+                        <a class="tag" href="{{ url_for('dictionary', tag=tag) }}">{{ tag }}</a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="empty-state">
+                    No tags yet. Search some words and add tags on their pages.  
+                    Every word is auto-tagged by language (e.g. <em>english</em>, <em>hindi</em>).
+                </p>
             {% endif %}
         </div>
     </div>

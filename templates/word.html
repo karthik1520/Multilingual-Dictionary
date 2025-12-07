@@ -36,6 +36,15 @@
             </div>
 
             <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                <!-- NEW: Pronounce button -->
+                <button type="button"
+                        class="btn btn-ghost btn-pill"
+                        data-speak-word="{{ word }}"
+                        data-speak-lang="{{ selected_language }}">
+                    <span class="btn-icon">🔊</span>
+                    <span>Pronounce</span>
+                </button>
+
                 <a class="btn btn-ghost btn-pill" href="{{ url_for('toggle_favorite', language=selected_language, word=word) }}">
                     <span class="btn-icon">{% if is_favorite %}★{% else %}☆{% endif %}</span>
                     <span>{% if is_favorite %}Unfavourite{% else %}Favourite{% endif %}</span>
